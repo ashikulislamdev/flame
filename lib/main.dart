@@ -8,13 +8,16 @@ void main() {
 }
 
 class MyGame extends FlameGame{
+  SpriteComponent girl = SpriteComponent();
+  SpriteComponent boy = SpriteComponent();
+  SpriteComponent bgImg = SpriteComponent();
+  final double charSize = 200.00;
+  bool turnAway = false;
+
   @override
   Future<void> onLoad() async{
-    SpriteComponent girl = SpriteComponent();
-    SpriteComponent boy = SpriteComponent();
-    SpriteComponent bgImg = SpriteComponent();
 
-    const double charSize = 200.00;
+    
     super.onLoad();
     final screenWidth = size[0];
     final screenHeight = size[1];
@@ -27,14 +30,33 @@ class MyGame extends FlameGame{
     girl
       ..sprite = await loadSprite("girl.png")
       ..size = Vector2(charSize, charSize)
-      ..y = screenHeight - charSize - textBoxHeight;
+      ..y = screenHeight - charSize - textBoxHeight
+      ..anchor = Anchor.topCenter;
     add(girl);
 
     boy
       ..sprite = await loadSprite('boy.png')
       ..size = Vector2(charSize, charSize)
       ..y = screenHeight - charSize - textBoxHeight
-      ..x = screenWidth - charSize;
+      ..x = screenWidth - charSize
+      ..anchor = Anchor.topCenter
+      ..flipHorizontally();
     add(boy);
   }
+
+  @override
+  void update(double dt){
+    super.update(dt);
+    if(girl.x < size[0]/2 - 100){
+      girl.x += 30 * dt;
+    }else if(turnAway == false){
+      print("turn away");
+      boy.flipHorizontally();
+      turnAway = true;
+    }
+    if(boy.x > size[0]/2 - 50){
+      boy.x -= 30 * dt;
+    }
+  }
+
 }
