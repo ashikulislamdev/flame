@@ -1,16 +1,19 @@
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(GameWidget(game: MyGame()));
 }
 
-class MyGame extends FlameGame{
+class MyGame extends FlameGame with HasTappables{
   SpriteComponent girl = SpriteComponent();
   SpriteComponent boy = SpriteComponent();
   SpriteComponent bgImg = SpriteComponent();
+  DialogButton dialogButton = DialogButton();
+  final Vector2 buttonSize = Vector2(50.0, 50.0);
+
   final double charSize = 200.00;
   bool turnAway = false;
   int dialogLevel = 0;
@@ -46,6 +49,11 @@ class MyGame extends FlameGame{
       ..anchor = Anchor.topCenter
       ..flipHorizontally();
     add(boy);
+
+    dialogButton
+      ..sprite = await loadSprite("play_next.png")
+      ..size = buttonSize
+      ..position = Vector2(size[0]- buttonSize[0] - 10, size[1] - buttonSize[1] - 10);
   }
 
   @override
@@ -97,8 +105,22 @@ class MyGame extends FlameGame{
             "Boltu: What about?", 
             Vector2(10, size[1] - 100)
           );
+          add(dialogButton);
           break;
       }
     }
 
+}
+
+class DialogButton extends SpriteComponent with Tappable{
+  @override
+  bool onTapDown(TapDownInfo event){
+    try {
+      print("We are able to move next screen");
+      return true;
+    } catch (error) {
+      print("error");
+      return false;
+    }
+  }
 }
